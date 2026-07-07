@@ -91,3 +91,11 @@ SessionStart(startup) cbm-session-reminder + karpathy-guidelines inject
 | harness plugin | https://github.com/revfactory/harness |
 | andrej-karpathy-skills plugin | https://github.com/forrestchang/andrej-karpathy-skills |
 | superpowers / php-lsp | `claude-plugins-official` marketplace |
+
+## Troubleshooting
+
+**`codebase-memory-mcp: version 'GLIBC_2.38' not found`** (old distro / container) —
+`install.sh` prefers the static `-portable` CBM build on Linux, which runs without a
+recent glibc. If you already installed the non-portable build, delete
+`~/.local/bin/codebase-memory-mcp` and re-run `./install.sh`. If it still fails, use a
+newer base image (Ubuntu 24.04 / Debian trixie) or install a newer `libstdc++6`.
