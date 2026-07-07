@@ -1,0 +1,12 @@
+#!/bin/bash
+# PostToolUse: touch marker whenever a codebase-memory-mcp tool runs.
+# Paired with cbm-code-discovery-gate, which checks for the marker.
+# No `set -e`: malformed stdin JSON must not turn into a hook error.
+set -uo pipefail
+INPUT=$(cat)
+TOOL=$(echo "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null || echo "")
+SESSION=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null | tr -cd 'a-zA-Z0-9-')
+if [[ "$TOOL" == mcp__codebase-memory-mcp__* && -n "$SESSION" ]]; then
+  touch "/tmp/cbm-mcp-used-$SESSION"
+fi
+exit 0

@@ -1,0 +1,13 @@
+# CBM knowledge graph + logs
+.codebase/
+
+# Caveman compress backups (human-readable originals)
+*.original.md
+
+# install.sh per-file/per-dir backups
+*.bak
+*.bak.*
+
+# OS metadata
+.DS_Store
+**/.DS_Store
