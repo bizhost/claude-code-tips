@@ -67,7 +67,7 @@ CBM + context-mode.
 
 ## Subagents
 Delegate default. Main = coordinator.
-- **MANDATORY delegate**: online research (tvly/ctx_fetch_and_index), refactor >2 files, summarize >1 file, audit, explore unknown repo, multi-file impact, big log triage.
+- **MANDATORY delegate**: online research (ctx_fetch_and_index), refactor >2 files, summarize >1 file, audit, explore unknown repo, multi-file impact, big log triage.
 - **Skip**: 1-file read, 1-grep, single-known-path edit. Inline.
 - **Parallel cap**: 3 concurrent. Serial if dependent.
 - **Type**: `general-purpose` (edits), `Plan` (read-only arch), `Explore` (read-only nav).

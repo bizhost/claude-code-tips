@@ -212,15 +212,6 @@ else
   [[ "$INSTALL_CAVEMAN" -eq 1 ]] && install_plugin caveman@caveman
 fi
 
-# ── 4. Tavily CLI (optional — used by research subagents) ──
-echo "→ Installing tvly CLI (optional)..."
-if command -v npm >/dev/null 2>&1; then
-  npm install -g tavily-cli 2>/dev/null || echo "  ⚠ npm install -g tavily-cli failed — run manually if you need web research."
-else
-  echo "  ⚠ npm not found — skip. Install Node.js then 'npm install -g tavily-cli' if you need it."
-fi
-echo "  (export TAVILY_API_KEY in your shell rc to use it — get a key at tavily.com)"
-
 # ── Helpers ──
 cp_with_backup() {
   local src="$1" dst="$2"

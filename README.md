@@ -91,4 +91,3 @@ SessionStart(startup) cbm-session-reminder + karpathy-guidelines inject
 | harness plugin | https://github.com/revfactory/harness |
 | andrej-karpathy-skills plugin | https://github.com/forrestchang/andrej-karpathy-skills |
 | superpowers / php-lsp | `claude-plugins-official` marketplace |
-| tavily-cli (optional) | `npm install -g tavily-cli` |
