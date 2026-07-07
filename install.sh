@@ -157,48 +157,23 @@ else
 fi
 
 # ── 2. codebase-memory-mcp ──
-# On Linux, prefer the *-portable build: the default linux build links against
-# a recent glibc/libstdc++ (GLIBC_2.38, GLIBCXX_3.4.32) and fails on older
-# distros/containers with "version `GLIBC_2.38' not found". Portable is static.
+# Delegate to CBM's official installer. On Linux it fetches the fully-static
+# *-portable build (the standard build dynamically links glibc 2.38+ and fails
+# on older distros/containers with "version `GLIBC_2.38' not found"), verifies
+# the binary runs, and installs to ~/.local/bin. Reinstall if an existing binary
+# won't run here (e.g. a stale glibc-linked build) — a plain -x check can't tell.
 echo "→ Installing codebase-memory-mcp..."
 CBM_BIN="$HOME/.local/bin/codebase-memory-mcp"
-CBM_OS=""; CBM_ARCH=""
-case "$(uname)" in Darwin) CBM_OS=darwin ;; Linux) CBM_OS=linux ;; *) echo "  ⚠ Unsupported OS $(uname); skip CBM." ;; esac
-case "$(uname -m)" in arm64|aarch64) CBM_ARCH=arm64 ;; x86_64|amd64) CBM_ARCH=amd64 ;; *) echo "  ⚠ Unsupported arch $(uname -m); skip CBM." ;; esac
-if [[ -n "$CBM_OS" && -n "$CBM_ARCH" ]]; then
-  if [[ -x "$CBM_BIN" ]]; then
-    echo "  ✓ CBM already installed at ~/.local/bin/codebase-memory-mcp"
+CBM_INSTALLER="https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh"
+if command -v timeout >/dev/null 2>&1; then CBM_TO="timeout 60"; else CBM_TO=""; fi
+if [[ -x "$CBM_BIN" ]] && $CBM_TO "$CBM_BIN" --version >/dev/null 2>&1; then
+  echo "  ✓ CBM already installed and runnable ($($CBM_TO "$CBM_BIN" --version 2>/dev/null))"
+else
+  [[ -x "$CBM_BIN" ]] && echo "  … existing CBM binary won't run here — reinstalling via official installer"
+  if curl -fsSL "$CBM_INSTALLER" | bash; then
+    echo "  ✓ CBM installed via official installer"
   else
-    # Best-compat asset first. curl+tar in one guard so a bad download can't
-    # abort the whole install under `set -e`.
-    CBM_ASSETS=()
-    [[ "$CBM_OS" == linux ]] && CBM_ASSETS+=("codebase-memory-mcp-${CBM_OS}-${CBM_ARCH}-portable.tar.gz")
-    CBM_ASSETS+=("codebase-memory-mcp-${CBM_OS}-${CBM_ARCH}.tar.gz")
-    mkdir -p "$HOME/.local/bin"; CBM_TMP="$(mktemp -d)"
-    for asset in "${CBM_ASSETS[@]}"; do
-      url="https://github.com/DeusData/codebase-memory-mcp/releases/latest/download/$asset"
-      if curl -fsSL "$url" -o "$CBM_TMP/cbm.tar.gz" && tar -xzf "$CBM_TMP/cbm.tar.gz" -C "$CBM_TMP" 2>/dev/null && [[ -f "$CBM_TMP/codebase-memory-mcp" ]]; then
-        mv "$CBM_TMP/codebase-memory-mcp" "$CBM_BIN"; chmod +x "$CBM_BIN"
-        echo "  ✓ CBM installed ($asset)"; break
-      fi
-    done
-    rm -rf "$CBM_TMP"
-    [[ -x "$CBM_BIN" ]] || echo "  ⚠ CBM download failed. Install manually from https://github.com/DeusData/codebase-memory-mcp/releases"
-  fi
-
-  # Run CBM's own setup (best effort). Its output also surfaces a libc mismatch,
-  # which on older Linux would otherwise only show up at first real use.
-  if [[ -x "$CBM_BIN" ]]; then
-    if command -v timeout >/dev/null 2>&1; then CBM_TO="timeout 30"; else CBM_TO=""; fi
-    cbm_out="$($CBM_TO "$CBM_BIN" setup claude-code 2>&1 || true)"
-    case "$cbm_out" in
-      *GLIBC*|*"not found"*)
-        echo "  ⚠ CBM binary won't run on this system's libc:"
-        printf '      %s\n' "$(printf '%s\n' "$cbm_out" | sed -n '1p')"
-        echo "    Older libc/libstdc++ than the build needs. Options:"
-        echo "      - newer base image (Ubuntu 24.04 / Debian trixie), or"
-        echo "      - install a newer libstdc++6/glibc, or build CBM from source." ;;
-    esac
+    echo "  ⚠ CBM install failed. Run manually:  curl -fsSL $CBM_INSTALLER | bash"
   fi
 fi
 

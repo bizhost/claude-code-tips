@@ -95,7 +95,11 @@ SessionStart(startup) cbm-session-reminder + karpathy-guidelines inject
 ## Troubleshooting
 
 **`codebase-memory-mcp: version 'GLIBC_2.38' not found`** (old distro / container) —
-`install.sh` prefers the static `-portable` CBM build on Linux, which runs without a
-recent glibc. If you already installed the non-portable build, delete
-`~/.local/bin/codebase-memory-mcp` and re-run `./install.sh`. If it still fails, use a
-newer base image (Ubuntu 24.04 / Debian trixie) or install a newer `libstdc++6`.
+the standard CBM build needs glibc 2.38+. `install.sh` delegates to CBM's official
+installer, which on Linux fetches the fully-static `-portable` build that runs
+without a recent glibc, and it re-installs automatically if an existing binary
+won't run. To fix by hand:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash
+```
