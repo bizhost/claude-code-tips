@@ -14,7 +14,7 @@ Stack: **CBM** (code knowledge graph) + **context-mode** (output sandbox) +
 ## Install
 
 ```bash
-git clone <your-remote-url> claude-code-tips
+git clone git@github.com:bizhost/claude-code-tips.git
 cd claude-code-tips && chmod +x install.sh && ./install.sh
 ```
 
