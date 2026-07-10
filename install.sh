@@ -299,7 +299,7 @@ ensure_mcp_json() {
   fi
 }
 
-# ── 5. Copy hooks, rules, commands ──
+# ── 4. Copy hooks, rules, commands ──
 echo "→ Copying hooks, rules, commands..."
 mkdir -p "$HOME/.claude/hooks" "$HOME/.claude/rules" "$HOME/.claude/commands"
 for src in "$REPO_DIR/hooks/"*;      do [[ -f "$src" ]] && cp_with_backup "$src" "$HOME/.claude/hooks/$(basename "$src")"; done
@@ -307,30 +307,31 @@ for src in "$REPO_DIR/rules/"*.md;   do [[ -f "$src" ]] && cp_with_backup "$src"
 for src in "$REPO_DIR/commands/"*.md; do [[ -f "$src" ]] && cp_with_backup "$src" "$HOME/.claude/commands/$(basename "$src")"; done
 chmod +x "$HOME/.claude/hooks/"* 2>/dev/null || true
 
-# ── 6. Statusline ──
+# ── 5. Statusline ──
 echo "→ Installing statusline..."
-cp_with_backup "$REPO_DIR/statusline/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
-chmod +x "$HOME/.claude/statusline-command.sh"
+mkdir -p "$HOME/.claude/statusline"
+cp_with_backup "$REPO_DIR/statusline/statusline-command.sh" "$HOME/.claude/statusline/statusline-command.sh"
+chmod +x "$HOME/.claude/statusline/statusline-command.sh"
 
-# ── 8. RTK.md (referenced by CLAUDE.md via @RTK.md) ──
+# ── 6. RTK.md (referenced by CLAUDE.md via @RTK.md) ──
 if [[ -f "$REPO_DIR/RTK.md" ]]; then
   echo "→ Installing RTK.md..."
   cp_with_backup "$REPO_DIR/RTK.md" "$HOME/.claude/RTK.md"
 fi
 
-# ── 8b. Register codebase-memory-mcp as an MCP server ──
+# ── 7. Register codebase-memory-mcp as an MCP server ──
 echo "→ Registering codebase-memory-mcp (.mcp.json)..."
 ensure_mcp_json
 
-# ── 9. CLAUDE.md framework block ──
+# ── 8. CLAUDE.md framework block ──
 echo "→ Injecting CLAUDE.md framework block..."
 inject_claude_md
 
-# ── 10. settings.json deep merge ──
+# ── 9. settings.json deep merge ──
 echo "→ Merging settings.json..."
 merge_settings_json
 
-# ── 11. Validate ──
+# ── 10. Validate ──
 echo "→ Validating..."
 if "$REPO_DIR/install.sh" --check >/dev/null 2>&1; then
   echo "  ✓ settings, hook paths, and @-includes resolve"

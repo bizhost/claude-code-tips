@@ -27,10 +27,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "context-mode hook claude-code pretooluse"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/bash-ban-raw-tools"
           },
           {
@@ -55,48 +51,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "context-mode hook claude-code posttooluse"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/cbm-mcp-marker"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "context-mode hook claude-code precompact"
           }
         ]
       }
     ],
     "SessionStart": [
       {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "context-mode hook claude-code sessionstart"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/memory-repo-symlink"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
         "hooks": [
           {
             "type": "command",
             "command": "~/.claude/hooks/context-mode-cache-heal.mjs"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/memory-repo-symlink"
           }
         ]
       },
@@ -144,7 +113,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
+    "command": "bash ~/.claude/statusline/statusline-command.sh"
   },
   "enabledPlugins": {
     "caveman@caveman": true,

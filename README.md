@@ -70,14 +70,17 @@ caveman); this repo ships no local `skills/`.
 ## Hook map
 
 ```
-PreToolUse(Bash)      context-mode + bash-ban-raw-tools + rtk hook claude
+PreToolUse(Bash)      bash-ban-raw-tools + rtk hook claude
 PreToolUse(Grep|Glob) cbm-code-discovery-gate
-PostToolUse           context-mode + cbm-mcp-marker
-PreCompact            context-mode
-SessionStart          context-mode + memory-repo-symlink + cbm-session-reminder
-                      + context-mode-cache-heal.mjs
+PostToolUse           cbm-mcp-marker
+SessionStart          context-mode-cache-heal.mjs + memory-repo-symlink
 SessionStart(startup) cbm-session-reminder + karpathy-guidelines inject
+SessionStart(resume|clear|compact) cbm-session-reminder
 ```
+
+context-mode's own hooks (PreToolUse routing, PostToolUse capture, PreCompact,
+SessionStart, Stop) are registered by the plugin itself — settings.json does
+not duplicate them.
 
 ## Externals (auto-installed by `install.sh`)
 
